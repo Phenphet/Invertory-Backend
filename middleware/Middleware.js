@@ -5,7 +5,7 @@ dotenv.config()
 function checkSingIn (req, res, next){
     try{
         const secret = process.env.TOKEN
-        const token = req.headers['autorization']
+        const token = req.headers['authorization']
         const result = jwt.verify(token, secret)
 
         if (result != undefined){
