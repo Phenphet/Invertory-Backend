@@ -23,3 +23,56 @@ model User {
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 }
+
+model Category {
+  category_id Int @id() @default(autoincrement())
+  name String
+  description String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  product Product[]
+}
+
+model WarehouseLocation{
+  location_id Int @id() @default(autoincrement())
+  name String
+  address String
+  zone String
+  product Product[]
+  stockmovement_SLI Stockmovement[] @relation("SLI")
+  stockmovement_DLI Stockmovement[] @relation("DLI")
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+} 
+
+model Product {
+  product_id Int @id() @default(autoincrement())
+  name String
+  description String
+  category_id Int
+  category Category @relation(fields: [category_id], references: [category_id])
+  quantity Int
+  unit String
+  reoder_level String
+  location_id Int
+  warehouselocation WarehouseLocation @relation(fields: [location_id], references: [location_id])
+  stockmovement   Stockmovement[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Stockmovement {
+  movement_id Int @id @default(autoincrement())
+  product_id Int
+  product Product @relation(fields: [product_id], references: [product_id])
+  movement_type String
+  qurity Int
+  mocement_date DateTime
+  referenc_number Int
+  source_location_id Int
+  destination_locatuin_id Int
+  warehouseLocation_SLI WarehouseLocation @relation("SLI", fields:[source_location_id], references: [location_id])
+  warehouseLocation_DLI WarehouseLocation @relation("DLI", fields:[destination_locatuin_id], references: [location_id])
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
