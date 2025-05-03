@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt')
 const app = express.Router()
 const { PrismaClient } = require('@prisma/client')
 const jwt = require('jsonwebtoken')
+const { jwtDecode } = require('jwt-decode')
 const prisma = new PrismaClient()
 const dotenv = require('dotenv')
 dotenv.config()
@@ -113,10 +114,18 @@ app.post('/login', async(req, res) => {
 
 app.get('/verifytoken', CheckSingInMiddle,  async(req, res) => {
     try{
-        res.json({message: 'hello'})
+        const token = req.headers['authorization']
+      
+        const decode = jwtDecode(token)
+        console.log(decode)
+        res.json({
+            message: 'verify success',
+            fullname: decode.fullname,
+            role: decode.role
+        })
     }   
-    catch (error){
-        res.status(500).send({error: error})
+    catch (e){
+        res.status(500).send({error: e.message})
     }
 })
 
