@@ -46,14 +46,14 @@ model WarehouseLocation{
 } 
 
 model Product {
-  product_id Int @id() @default(autoincrement())
+  product_id String @id() 
   name String
   description String
   category_id Int
   category Category @relation(fields: [category_id], references: [category_id])
   quantity Int
   unit String
-  reoder_level String
+  reoder_level Int
   location_id Int
   warehouselocation WarehouseLocation @relation(fields: [location_id], references: [location_id])
   stockmovement   Stockmovement[]
@@ -63,11 +63,11 @@ model Product {
 
 model Stockmovement {
   movement_id Int @id @default(autoincrement())
-  product_id Int
+  product_id String
   product Product @relation(fields: [product_id], references: [product_id])
   movement_type String
-  qurity Int
-  mocement_date DateTime
+  quantity Int
+  movement_date DateTime
   referenc_number Int
   source_location_id Int
   destination_locatuin_id Int
