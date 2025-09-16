@@ -10,13 +10,22 @@ dotenv.config()
 
 const CheckSingInMiddle = require('../middleware/Middleware')
 
-
-
 app.get('/', async(req, res) => {
     try{
-
-        const result = await prisma.user.findMany()
-
+        const result = await prisma.user.findMany({
+            select: {
+                user_id: true,
+                fullname: true,
+                email: true,
+                role: true
+            },
+            where: {
+                status_delete: false
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        })
         if(result.length > 0){
             res.json(result)
         }else{
@@ -30,7 +39,6 @@ app.get('/', async(req, res) => {
         })
     }
 })
-
 
 app.post('/create', async(req, res) => {
     try{
@@ -69,7 +77,6 @@ app.post('/create', async(req, res) => {
         res.status(500).json({error: `server error`})
     }
 })
-
 
 app.post('/login', async(req, res) => {
     try{
@@ -117,14 +124,21 @@ app.get('/verifytoken', CheckSingInMiddle,  async(req, res) => {
         const token = req.headers['authorization']
       
         const decode = jwtDecode(token)
-        console.log(decode)
-        res.json({
-            message: 'verify success',
-            fullname: decode.fullname,
-            role: decode.role
-        })
+        if(decode){
+            console.log(decode)
+            res.json({
+                message: 'verify success',
+                fullname: decode.fullname,
+                role: decode.role
+            })
+        }
+        else{
+            console.log(e.message)
+            res.status(404).json({message: 'verify token fail'})
+        }
     }   
     catch (e){
+        console.log(e.message)
         res.status(500).send({error: e.message})
     }
 })

@@ -14,9 +14,17 @@ function checkSingIn (req, res, next){
 
     }catch (e){
         console.log(e)
-        res.status(500).send({ error: e.message})
+        res.status(401).send('login fail')
     }
 }
 
+function reToken (req, res, next) {
+    try {
+        next()  
+    } catch(e) {
+        console.error(e.message)
+        res.status(500).send({error: e.message})
+    }
+}
 
 module.exports = checkSingIn

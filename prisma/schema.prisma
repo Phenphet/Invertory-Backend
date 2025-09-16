@@ -20,6 +20,7 @@ model User {
   email String
   password String
   role String
+  status_delete Boolean @default(false)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 }
@@ -28,6 +29,7 @@ model Category {
   category_id Int @id() @default(autoincrement())
   name String
   description String
+  status_delete Boolean @default(false)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   product Product[]
@@ -38,6 +40,7 @@ model WarehouseLocation{
   name String
   address String
   zone String
+  status_delete Boolean @default(false)
   product Product[]
   stockmovement_SLI Stockmovement[] @relation("SLI")
   stockmovement_DLI Stockmovement[] @relation("DLI")
@@ -55,6 +58,7 @@ model Product {
   unit String
   reoder_level Int
   location_id Int
+  status_delete Boolean @default(false)
   warehouselocation WarehouseLocation @relation(fields: [location_id], references: [location_id])
   stockmovement   Stockmovement[]
   createdAt  DateTime   @default(now())
@@ -68,11 +72,13 @@ model Stockmovement {
   movement_type String
   quantity Int
   movement_date DateTime
-  referenc_number Int
-  source_location_id Int
-  destination_locatuin_id Int
-  warehouseLocation_SLI WarehouseLocation @relation("SLI", fields:[source_location_id], references: [location_id])
-  warehouseLocation_DLI WarehouseLocation @relation("DLI", fields:[destination_locatuin_id], references: [location_id])
+  reference_number String
+  source_location_id Int?
+  destination_location_id Int?
+  warehouseLocation_SLI WarehouseLocation? @relation("SLI", fields:[source_location_id], references: [location_id])
+  warehouseLocation_DLI WarehouseLocation? @relation("DLI", fields:[destination_location_id], references: [location_id])
+  remarks String
+  status_delete Boolean @default(false)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 }
